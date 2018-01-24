@@ -16,6 +16,7 @@
 namespace Pimcore\Bundle\ObjectMergerBundle\Controller;
 
 use Pimcore\Logger;
+use Pimcore\Model\DataObject\ClassDefinition\Data\Classificationstore;
 use Pimcore\Model\DataObject\ClassDefinition\Data;
 use Pimcore\Model\Element\Editlock;
 use Pimcore\Model\Object\AbstractObject;
@@ -53,6 +54,9 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
     private function getDiffDataForObject(Concrete $object, $objectFromVersion = false)
     {
         foreach ($object->getClass()->getFieldDefinitions() as $key => $def) {
+            if ($def instanceof Classificationstore) {
+                continue;
+            }
             $this->getDiffDataForField($object, $key, $def, $objectFromVersion);
         }
     }
