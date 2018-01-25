@@ -18,6 +18,7 @@ namespace Pimcore\Bundle\ObjectMergerBundle\Controller;
 use Pimcore\Logger;
 use Pimcore\Model\Element\Editlock;
 use Pimcore\Model\Object\AbstractObject;
+use Pimcore\Model\DataObject\ClassDefinition\Data\Classificationstore;
 use Pimcore\Model\Object\Concrete;
 use Pimcore\Model\Object\Service;
 use Symfony\Component\EventDispatcher\GenericEvent;
