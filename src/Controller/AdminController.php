@@ -16,6 +16,7 @@
 namespace Pimcore\Bundle\ObjectMergerBundle\Controller;
 
 use Pimcore\Logger;
+use Pimcore\Model\DataObject\ClassDefinition\Data;
 use Pimcore\Model\Element\Editlock;
 use Pimcore\Model\Object\AbstractObject;
 use Pimcore\Model\DataObject\ClassDefinition\Data\Classificationstore;
@@ -34,7 +35,7 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
     /**
      * @param $object
      * @param $key
-     * @param $fielddefinition \Pimcore\Model\Object\ClassDefinition\Data
+     * @param $fielddefinition Data
      * @param $objectFromVersion
      * @param int $level
      */
@@ -221,11 +222,11 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
             $objectData['o1path'] = $object1->getFullPath();
             $objectData['o2path'] = $object2->getFullPath();
 
-            return $this->json($objectData);
+            return $this->adminJson($objectData);
         } else {
             Logger::debug('prevented getting object id [ ' . $object1->getId() . ' or ' . $object2->getId() . ' ] because of missing permissions');
 
-            return $this->json(['success' => false, 'message' => 'missing_permission']);
+            return $this->adminJson(['success' => false, 'message' => 'missing_permission']);
         }
     }
 
@@ -247,13 +248,13 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
         $object2 = AbstractObject::getByPath($path2);
 
         if ($object1 && $object2) {
-            return $this->json([
+            return $this->adminJson([
                 'success' => true,
                 'oid1' => $object1->getId(),
                 'oid2' => $object2->getId(),
             ]);
         } else {
-            return $this->json(['success' => false, 'message' => 'plugin_objectmerger_no_object']);
+            return $this->adminJson(['success' => false, 'message' => 'plugin_objectmerger_no_object']);
         }
     }
 
@@ -271,7 +272,7 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
         $objectId = $request->get('id');
 
         if (Editlock::isLocked($objectId, 'object')) {
-            return $this->json(['success' => false, 'message' => 'plugin_objectmerger_object_locked']);
+            return $this->adminJson(['success' => false, 'message' => 'plugin_objectmerger_object_locked']);
         }
 
         $attributes = json_decode($request->get('attributes'), true);
@@ -306,6 +307,6 @@ class AdminController extends \Pimcore\Bundle\AdminBundle\Controller\AdminContro
 
         \Pimcore::getEventDispatcher()->dispatch('plugin.ObjectMerger.postMerge', new GenericEvent($this, ['targetId' => $object->getId(), 'sourceId' => $request->get('sourceId')]));
 
-        return $this->json(['success' => true, 'targetId' => $object->getId(), 'sourceId' => $request->get('sourceId')]);
+        return $this->adminJson(['success' => true, 'targetId' => $object->getId(), 'sourceId' => $request->get('sourceId')]);
     }
 }
