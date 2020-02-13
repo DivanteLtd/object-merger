@@ -16,12 +16,20 @@
 namespace Pimcore\Bundle\ObjectMergerBundle;
 
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
-use Pimcore\Extension\Bundle\Installer\InstallerInterface;
+use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
 class ObjectMergerBundle extends AbstractPimcoreBundle
 {
-    const PLUGIN_NAME = 'ObjectMerger';
+    use PackageVersionTrait;
 
+    /**
+     * @inheritDoc
+     */
+    protected function getComposerPackageName()
+    {
+        return 'pimcore/object-merger';
+    }
+ 
     /**
      * @return array
      */
@@ -44,15 +52,5 @@ class ObjectMergerBundle extends AbstractPimcoreBundle
             '/bundles/objectmerger/js/grideditor.js'
 
         ];
-    }
-
-    /**
-     * If the bundle has an installation routine, an installer is responsible of handling installation related tasks
-     *
-     * @return InstallerInterface|null
-     */
-    public function getInstaller()
-    {
-        return new Installer();
     }
 }
